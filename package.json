@@ -5,7 +5,11 @@
   "main": "src/index.html",
   "scripts": {
       "cy:open": "cypress open",
-      "test": "cypress run"
+      "test": "cypress run",
+      "pluginsFile": false,
+      "viewportHeight": 880,
+      "viewportWidth": 1280
+
   },
   "repository": {
     "type": "git",
@@ -24,4 +28,5 @@
   "devDependencies": {
     "cypress": "^11.0.1"
   }
+  
 }
