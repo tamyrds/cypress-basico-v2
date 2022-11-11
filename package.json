@@ -5,10 +5,7 @@
   "main": "src/index.html",
   "scripts": {
       "cy:open": "cypress open",
-      "test": "cypress run",
-      "pluginsFile": false,
-      "viewportHeight": 880,
-      "viewportWidth": 1280
+      "test": "cypress run"
 
   },
   "repository": {
