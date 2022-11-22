@@ -9,7 +9,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     .should('be.equal','Central de Atendimento ao Cliente TAT')
 })
 
-  it.only('Deve preencher o formulario', () => {
+  it('Deve preencher o formulario', () => {
     const TextLong = 'Teste, teste, teste, Teste, teste, testeTeste, teste, testeTeste, teste, testeTeste, teste, testeTeste, teste, teste'
       cy.fillMandatoryFieldsAndSubmit()
      
@@ -91,7 +91,27 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     .should('be.visible','Valide os campos obrigatórios!')
   });
 
-  it('envia o formuário com sucesso usando um comando customizado', () => {
+  it('`seleciona um produto (YouTube) por seu texto`', () => {
+    cy.get('select[id="product"]').select('cursos')
+      .should('have.value', 'cursos')
       
   });
+
+  it('seleciona um produto (Mentoria) por seu valor (value)', () => {
+    cy.get('select[id="product"]').select('mentoria')
+    .should('have.value', 'mentoria')
+  });
+
+  it('marca o tipo de atendimento "Feedback', () => {
+      cy.get('input[value="feedback"]').check()
+  });
+  it.only('marca cada tipo de atendimento', () => {
+    cy.get('input[type="radio"]').check()
+      .should('have.length', 3)
+      .each(function($radio){
+        cy.wrap($radio).check()
+        cy.wrap($radio).should('be.visible')
+      })
+});
+
 })
