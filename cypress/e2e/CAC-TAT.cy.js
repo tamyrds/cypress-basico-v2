@@ -105,13 +105,23 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   it('marca o tipo de atendimento "Feedback', () => {
       cy.get('input[value="feedback"]').check()
   });
-  it.only('marca cada tipo de atendimento', () => {
+  it('marca cada tipo de atendimento', () => {
     cy.get('input[type="radio"]').check()
       .should('have.length', 3)
       .each(function($radio){
         cy.wrap($radio).check()
         cy.wrap($radio).should('be.visible')
       })
+});
+
+it.only('marca ambos checkboxes, depois desmarca o último', () => {
+    cy.get('input[value="email"]').check()
+      .uncheck()
+      .last()
+      .should('not.be.checked')
+});
+it.only('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
+  cy.get('input[value="phone"]').check()
 });
 
 })
