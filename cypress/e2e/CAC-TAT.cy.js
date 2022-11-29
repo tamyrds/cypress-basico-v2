@@ -114,14 +114,42 @@ describe('Central de Atendimento ao Cliente TAT', () => {
       })
 });
 
-it.only('marca ambos checkboxes, depois desmarca o último', () => {
+it('marca ambos checkboxes, depois desmarca o último', () => {
     cy.get('input[value="email"]').check()
       .uncheck()
       .last()
       .should('not.be.checked')
 });
-it.only('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
+it('exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
   cy.get('input[value="phone"]').check()
 });
+it('seleciona um arquivo da pasta fixtures', () => {
+    cy.get('input[type="file"]')
+      .selectFile('./cypress/fixtures/example.json')
+      .should(function($input){
+        expect($input[0].files[0].name).to.equal('example.json')
+      })
+});
+it('seleciona um arquivo simulando um drag-and-drop', () => {
+  cy.get('input[type="file"]')
+    .selectFile('./cypress/fixtures/example.json', {action: 'drag-drop'})
+    .should(function($input){
+      expect($input[0].files[0].name).to.equal('example.json')
+    })
+});
+it('`seleciona um arquivo utilizando uma fixture para a qual foi dada um alias`', () => {
+  cy.fixture('example.json').as('sampleFile')
+  cy.get('input[type="file"]')
+    .selectFile('@sampleFile')
+});
 
-})
+it.only('`verifica que a política de privacidade abre em outra aba sem a necessidade de um clique`', () => {
+    cy.get('a[href="privacy.html"]').should('have.attr', 'target', '_blank')
+});
+it.only('acessa a página da política de privacidade removendo o target e então clicando no link', () => {
+  cy.get('a[href="privacy.html"]').invoke('removeAttr', 'target').click()
+});
+it.only('`testa a página da política de privacidade de forma independente`', () => {
+    
+});
+});
