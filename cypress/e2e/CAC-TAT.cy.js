@@ -9,14 +9,18 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     .should('be.equal','Central de Atendimento ao Cliente TAT')
 })
 
+  
   it('Deve preencher o formulario', () => {
-    const TextLong = 'Teste, teste, teste, Teste, teste, testeTeste, teste, testeTeste, teste, testeTeste, teste, testeTeste, teste, teste'
+    const TextLong = Cypress._.repeat('Teste, teste, teste, Teste', 2)
       cy.fillMandatoryFieldsAndSubmit()
-     
+
+      cy.clock()
       
       cy.contains('button[class="button"]', 'Enviar').click()
         .should('be.visible','Mensagem enviada com sucesso.')
+      
   });
+
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
     
     cy.get('input[id="firstName"]')
@@ -39,11 +43,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     .should('be.visible','Valide os campos obrigatórios!')
   });
 
-  it('Campos telefone só deve aceitar numeros ', () => {
-      cy.get('#phone')
-        .type('testettet')
-        .should('have.value', '')
-  });
+Cypress._.times(3, function() {
   it('Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
     cy.get('input[id="firstName"]')
       .type('Tamires Rodrigues')
@@ -67,6 +67,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
       .should('be.visible','Valide os campos obrigatórios!')
 
   });
+})
 
   it('Preenche e limpa os campos nome, sobrenome, email e telefone', () => {
     cy.get('input[id="firstName"]')
@@ -85,17 +86,18 @@ describe('Central de Atendimento ao Cliente TAT', () => {
   });
 
   it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', () => {
+    cy.clock()
     cy.get('button[class="button"]').click()
 
     cy.get('.error')
     .should('be.visible','Valide os campos obrigatórios!')
   });
 
-  it('`seleciona um produto (YouTube) por seu texto`', () => {
-    cy.get('select[id="product"]').select('cursos')
-      .should('have.value', 'cursos')
+  // it('seleciona um produto (YouTube) por seu texto', () => {
+  //   cy.get('select[id="product"]').select('cursos')
+  //     .should('have.value', 'cursos')
       
-  });
+  // });
 
   it('seleciona um produto (Mentoria) por seu valor (value)', () => {
     cy.get('select[id="product"]').select('mentoria')
@@ -149,7 +151,52 @@ it('`verifica que a política de privacidade abre em outra aba sem a necessidade
 it('acessa a página da política de privacidade removendo o target e então clicando no link', () => {
   cy.get('a[href="privacy.html"]').invoke('removeAttr', 'target').click()
 });
-it('`testa a página da política de privacidade de forma independente`', () => {
-    
+
+
+
+it('exibe e esconde as mensagens de sucesso e erro usando o .invoke', () => {
+  cy.get('.success')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Mensagem enviada com sucesso.')
+    .invoke('hide')
+    .should('not.be.visible')
+  cy.get('.error')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Valide os campos obrigatórios!')
+    .invoke('hide')
+    .should('not.be.visible')
 });
+it('`preenche a area de texto usando o comando invoke`', () => {
+  const longText = Cypress._.repeat('0123456789', 20)
+    
+  cy.get('#open-text-area')
+    .invoke('val', longText)
+    .should('have.value', longText)
+});
+
+it('`faz uma requisição HTTP`', () => {
+      cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+        .should(function(response) {
+
+      expect(response.status).to.equal(200);
+        const {status, statusText, body, gato} = response
+          expect(response.status).to.equal(200)
+          expect(response.statusText).to.equal('OK')
+          expect(response.body).to.include('CAC TAT');
+          //expect(response.gato).to.include('cat')
+    })
+
+  });
+
+  it.only('Achar o gato', () => {
+    cy.get('span[id="cat"]')
+    .invoke('show')
+    .should('be.visible')
+
+  });
+
 });
